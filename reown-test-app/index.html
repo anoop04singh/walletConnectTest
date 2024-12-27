@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HashCards with Reown AppKit</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <script type="module" src="main.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .hidden { display: none; }
+        .card {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .balance {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="wallet-connect" class="card">
+        <h2>Connect Wallet</h2>
+        <button id="open-connect-modal">Connect Wallet</button>
+        <button id="open-network-modal">Switch Network</button>
+    </div>
+
+    <div id="initial-screen" class="hidden">
+        <h1>HashCard Access</h1>
+        <div class="button-group">
+            <button onclick="scanNFC()">Scan NFC Card</button>
+            <button onclick="showManualEntry()">Enter Manually</button>
+        </div>
+    </div>
+
+    <div id="manual-entry" class="hidden card">
+        <h2>Enter Card Details</h2>
+        <input type="number" id="tokenId" placeholder="Token ID">
+        <input type="text" id="proof" placeholder="Proof">
+        <button onclick="loadCard()">Load Card</button>
+    </div>
+
+    <div id="dashboard" class="hidden card">
+        <h2>Card Dashboard</h2>
+        <div class="balance">Balance: <span id="cardBalance">0</span> ETH</div>
+        <div class="button-group">
+            <button onclick="showAddBalance()">Add Balance</button>
+            <button onclick="redeemCard()">Redeem Card</button>
+        </div>
+    </div>
+
+    <div id="add-balance" class="hidden card">
+        <h2>Add Balance</h2>
+        <input type="number" id="amount" step="0.01" placeholder="Amount in ETH">
+        <button onclick="addBalance()">Confirm</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "reown-test-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.5"
+  },
+  "dependencies": {
+    "@reown/appkit": "^1.6.2",
+    "@reown/appkit-adapter-wagmi": "^1.6.2",
+    "viem": "^2.21.57",
+    "wagmi": "^2.14.6"
+  }
+}

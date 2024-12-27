@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReOwn AppKit Wallet Connect</title>
+    <script src="https://cdn.jsdelivr.net/npm/@reownkit/appkit@0.2.2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .wallet-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 8px 4px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 200px;
+        }
+        #walletInfo {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+        .wallet-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wallet Connection Demo</h1>
+    <div id="connectButtons" class="wallet-list">
+        <button class="wallet-button" onclick="connectMetaMask()">Connect MetaMask</button>
+        <button class="wallet-button" onclick="connectCoinbase()">Connect Coinbase</button>
+        <button class="wallet-button" onclick="connectWalletConnect()">Connect WalletConnect</button>
+        <button class="wallet-button" onclick="connectPhantom()">Connect Phantom</button>
+    </div>
+    
+    <div id="walletInfo">
+        <h2>Connected Wallet</h2>
+        <p>Address: <span id="walletAddress"></span></p>
+        <p>Chain: <span id="chainName"></span></p>
+        <button class="wallet-button" onclick="disconnectWallet()" style="background-color: #dc3545;">Disconnect</button>
+    </div>
+
+    <script>
+        let appkit;
+        let currentConnection = null;
+
+        async function initializeAppKit() {
+            appkit = new ReOwnKit({
+                appName: "Wallet Demo",
+                appIcon: "https://example.com/icon.png", // Replace with your app's icon
+                chains: ["ethereum", "solana"], // Add or remove chains as needed
+            });
+        }
+
+        async function connectMetaMask() {
+            try {
+                const connection = await appkit.connectMetaMask();
+                handleConnection(connection);
+            } catch (error) {
+                console.error("MetaMask connection error:", error);
+                alert("Failed to connect MetaMask: " + error.message);
+            }
+        }
+
+        async function connectCoinbase() {
+            try {
+                const connection = await appkit.connectCoinbaseWallet();
+                handleConnection(connection);
+            } catch (error) {
+                console.error("Coinbase Wallet connection error:", error);
+                alert("Failed to connect Coinbase Wallet: " + error.message);
+            }
+        }
+
+        async function connectWalletConnect() {
+            try {
+                const connection = await appkit.connectWalletConnect();
+                handleConnection(connection);
+            } catch (error) {
+                console.error("WalletConnect error:", error);
+                alert("Failed to connect with WalletConnect: " + error.message);
+            }
+        }
+
+        async function connectPhantom() {
+            try {
+                const connection = await appkit.connectPhantom();
+                handleConnection(connection);
+            } catch (error) {
+                console.error("Phantom connection error:", error);
+                alert("Failed to connect Phantom: " + error.message);
+            }
+        }
+
+        async function handleConnection(connection) {
+            currentConnection = connection;
+            
+            // Get wallet info
+            const address = await connection.getAddress();
+            const chainInfo = await connection.getChainId();
+            
+            // Update UI
+            document.getElementById('walletAddress').textContent = address;
+            document.getElementById('chainName').textContent = chainInfo;
+            document.getElementById('walletInfo').style.display = 'block';
+            document.getElementById('connectButtons').style.display = 'none';
+
+            // Set up event listeners
+            connection.on('chainChanged', (chainId) => {
+                document.getElementById('chainName').textContent = chainId;
+            });
+
+            connection.on('accountsChanged', (accounts) => {
+                document.getElementById('walletAddress').textContent = accounts[0];
+            });
+        }
+
+        async function disconnectWallet() {
+            if (currentConnection) {
+                await currentConnection.disconnect();
+                currentConnection = null;
+                
+                // Reset UI
+                document.getElementById('walletInfo').style.display = 'none';
+                document.getElementById('connectButtons').style.display = 'flex';
+            }
+        }
+
+        // Initialize AppKit when page loads
+        window.addEventListener('load', initializeAppKit);
+    </script>
+</body>
+</html>
