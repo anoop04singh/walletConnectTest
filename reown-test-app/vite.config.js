@@ -4,12 +4,12 @@ import NodeModulesPolyfillPlugin from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
   plugins: [
-    NodeModulesPolyfillPlugin(),
+    NodeModulesPolyfillPlugin(), // Polyfills Node.js modules like 'crypto' and 'stream'
   ],
   optimizeDeps: {
     esbuildOptions: {
       define: {
-        global: 'globalThis',
+        global: 'globalThis', // Polyfill for 'global'
       },
       plugins: [
         NodeGlobalsPolyfillPlugin({
@@ -21,7 +21,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['ethers'],
+      external: ['ethers'], // Ensures ethers is treated as external
     },
   },
 });
